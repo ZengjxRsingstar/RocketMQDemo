@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--创建一个DefaultMQPushConsumer对象，用于消息接收-->
+   <bean id="rocketmqConsumer" class="org.apache.rocketmq.client.consumer.DefaultMQPushConsumer"
+   init-method="start" destroy-method="shutdown">
+       <!-- 设置消费者组名   -->
+       <property name="consumerGroup" value="spring-consumer-group"/>
+<!--  设置值NameServer 地址    -->
+  <property name="namesrvAddr" value="127.0.0.1:9876"></property>
+  <property name="subscription" >
+
+      <map>
+          <entry key="topic-spring" >
+            <value>*</value>
+          </entry>
+
+      </map>
+  </property>
+
+<!--   消息模式设置
+    广播模式：BROASCASTING
+    集群模式：CLUSTERING
+
+    -->
+ <property name="messageModel"   value="BROADCASTING" ></property>
+<!--  指定消息监听器，用于读取消息     -->
+  <property name="messageListener" ref="messageListener"></property>
+   </bean>
+<bean id="messageListener" class="com.zengjx.mq.listener.MessageListener"></bean>
+
+
+</beans>
